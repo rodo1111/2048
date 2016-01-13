@@ -24,7 +24,7 @@ Game2024.Controller.GameController = function(boardEl) {
 
 		for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
 			for (var indexColumn = 0; indexColumn < 4; indexColumn++) {
-				tokens[indexRow][indexColumn] = new Game2024.Model.Token('', Game2024.Model.COLORS.TRANSPARENT);
+				tokens[indexRow][indexColumn] = new Game2024.Model.Token(0, Game2024.Model.COLORS['0']);
 			}
 		}
 
@@ -34,19 +34,30 @@ Game2024.Controller.GameController = function(boardEl) {
 
 		// Set the token information
 		actualToken.setNumber(2);
-		actualToken.setColor(Game2024.Model.COLORS.GRAY);
+		actualToken.setColor(Game2024.Model.COLORS['2']);
 
 		return tokens;
 	}
 
 	/**
 	 * Generate the random initial token position.
+	 * 
+	 * @param tokens List of tokens of the board
 	 */
 	var generateRandomInitialTokenPosition = function(tokens) {
 		var randomRow = Math.floor((Math.random() * tokens.length));
 		var randomColumn = Math.floor((Math.random() * tokens.length));
 
 		return [randomRow, randomColumn];
+	}
+
+	/**
+	 * Process the addition fo the tokens according to the given direction.
+	 *
+	 * @param direction Direction given by the user interaction
+	 */ 
+	var processBoardInteraction = function(direction) {
+
 	}
 
 	/**
