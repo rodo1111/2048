@@ -1,0 +1,36 @@
+/* Board */
+.board {
+
+  .grid {
+    border-radius: 5px;
+    background-color: #bbada0;
+    max-width: 50%;
+    padding: 1.5% 1.5% 0.9% 1.5%;
+    margin: 50px auto;
+
+    .grid-wrapper {
+    	display: inline-block;
+    	width: 100%;
+
+    	.space {
+    		width: 23.8%;
+    		min-height: 70px;
+    		float: left;
+    		margin: 1.5% 0 0 1.5%;
+    		padding: 5% 0;
+    		text-align: center;
+    		background-color: #eee4da;
+    		border-radius: 2px;
+    		font-size: 2em;
+
+    		&.no-margin-top {
+    			margin-top: 0;
+	    	}
+
+	    	&.no-margin-left {
+	    		margin-left: 0;
+	    	}
+    	}
+    }
+  }
+}
