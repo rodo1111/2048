@@ -20,16 +20,21 @@ Game2024.Controller.GameController = function(boardEl) {
 	var generateBoardTokens = function() {
 		var tokens = [[], [], [], []];
 		var randomInitialTokenPosition;
+		var actualToken;
 
 		for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
 			for (var indexColumn = 0; indexColumn < 4; indexColumn++) {
-				tokens[indexRow][indexColumn] = new Game2024.Model.Token(0, Game2024.Model.COLORS.GRAY);
+				tokens[indexRow][indexColumn] = new Game2024.Model.Token('', Game2024.Model.COLORS.TRANSPARENT);
 			}
 		}
 
 		// Generate the random position of the first token
 		randomInitialTokenPosition = generateRandomInitialTokenPosition(tokens);
-		tokens[randomInitialTokenPosition[0]][randomInitialTokenPosition[1]].setNumber(2);
+		actualToken = tokens[randomInitialTokenPosition[0]][randomInitialTokenPosition[1]];
+
+		// Set the token information
+		actualToken.setNumber(2);
+		actualToken.setColor(Game2024.Model.COLORS.GRAY);
 
 		return tokens;
 	}

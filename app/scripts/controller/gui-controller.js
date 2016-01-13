@@ -12,8 +12,8 @@ Game2024.Controller.GUIController = function(pBoardEl) {
 
 		for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
 			for (var indexColumn = 0; indexColumn < tokens[indexRow].length; indexColumn++) {
-				$('.space-' + indexRow + '-' + indexColumn + ' div', boardEl)
-					.attr('class', tokens[indexRow][indexColumn].getColor())
+				$('.space-' + indexRow + '-' + indexColumn, boardEl)
+					.attr('data-color', tokens[indexRow][indexColumn].getColor())
 					.text(tokens[indexRow][indexColumn].getNumber());
 			}
 		}

@@ -14,12 +14,12 @@
 
     	.space {
     		width: 23.8%;
-    		min-height: 70px;
+    		min-height: 73px;
     		float: left;
     		margin: 1.5% 0 0 1.5%;
     		padding: 5% 0;
     		text-align: center;
-    		background-color: #eee4da;
+    		background-color: #cdc0b4;
     		border-radius: 2px;
     		font-size: 2em;
 
@@ -30,6 +30,14 @@
 	    	&.no-margin-left {
 	    		margin-left: 0;
 	    	}
+
+            &[data-color="gray"] {
+                background-color: #eee4da;
+            }
+
+            &[data-color="beige"] {
+                background-color: #ede0c8;
+            }
     	}
     }
   }
