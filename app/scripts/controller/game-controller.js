@@ -1,7 +1,8 @@
 /**
  * GameController class.
  */
-Game2024.Controller.GameController = function() {
+Game2024.Controller.GameController = function(boardEl) {
+	var guiController = new Game2024.Controller.GUIController(boardEl);
 	var board;
 
 	/**
@@ -47,17 +48,7 @@ Game2024.Controller.GameController = function() {
 	 * Print the board.
 	 */
 	var printBoard = function() {
-		var tokens = board.getTokens();
-
-		for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
-			var strRow = '';
-
-			for (var indexColumn = 0; indexColumn < tokens[indexRow].length; indexColumn++) {
-				strRow += tokens[indexRow][indexColumn].getNumber() + ', ';
-			}
-
-			console.log(strRow);
-		}
+		guiController.paintBoard(board);
 	}
 
 	this.init = function() {
@@ -65,6 +56,3 @@ Game2024.Controller.GameController = function() {
 		printBoard();
 	}
 }
-
-var gameController = new Game2024.Controller.GameController();
-gameController.init();
