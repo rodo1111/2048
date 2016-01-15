@@ -33,7 +33,6 @@ Game2024.Controller.GameController = function(boardEl) {
 
 		// Set the token information
 		actualToken.setNumber(2);
-		actualToken.setColor(Game2024.Model.COLORS['2']);
 
 		return tokens;
 	}

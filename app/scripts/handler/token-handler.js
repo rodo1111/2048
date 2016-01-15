@@ -8,7 +8,7 @@ Game2024.Handler.TokenHandler = {
 	 * @return Token object
 	 */
 	generateNewEmptyToken : function() {
-		return new Game2024.Model.Token(0, Game2024.Model.COLORS['0']);
+		return new Game2024.Model.Token(0);
 	},
 
 	/**
@@ -21,7 +21,6 @@ Game2024.Handler.TokenHandler = {
 	resetToken : function(token) {
 		if (token) {
 			token.setNumber(0);
-			token.setColor(Game2024.Model.COLORS['0']);
 		}
 
 		return token;
