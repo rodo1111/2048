@@ -24,7 +24,12 @@ gulp.task('styles', () => {
 });
 
 gulp.task('scripts', () => {
-  return gulp.src(['app/scripts/game-2024.js', 'app/scripts/model/*.js', 'app/scripts/controller/*.js', 'app/scripts/app.js'])
+  return gulp.src([
+      'app/scripts/game-2024.js', 
+      'app/scripts/model/*.js', 
+      'app/scripts/handler/*.js', 
+      'app/scripts/controller/*.js', 
+      'app/scripts/app.js'])
     .pipe($.concat('main.js'))
     .pipe($.plumber())
     .pipe($.sourcemaps.init())

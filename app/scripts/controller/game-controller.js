@@ -2,7 +2,6 @@
  * GameController class.
  */
 Game2024.Controller.GameController = function(boardEl) {
-	var guiController = new Game2024.Controller.GUIController(boardEl);
 	var board;
 
 	/**
@@ -24,7 +23,7 @@ Game2024.Controller.GameController = function(boardEl) {
 
 		for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
 			for (var indexColumn = 0; indexColumn < 4; indexColumn++) {
-				tokens[indexRow][indexColumn] = new Game2024.Model.Token(0, Game2024.Model.COLORS['0']);
+				tokens[indexRow][indexColumn] = Game2024.Handler.TokenHandler.generateNewEmptyToken();
 			}
 		}
 
@@ -55,16 +54,140 @@ Game2024.Controller.GameController = function(boardEl) {
 	 * Process the addition fo the tokens according to the given direction.
 	 *
 	 * @param direction Direction given by the user interaction
+	 * @param board Actual board to make the interaction
 	 */ 
-	var processBoardInteraction = function(direction) {
+	this.processBoardInteraction = function(direction, board) {
+		var tokens = board.getTokens();
+		var actualTokenNumber;
+		var nextTokenNumber;
+		var actualAddToken;
+		var nextEmptyTokenColumn = -1;
 
+		switch (direction) {
+			case Game2024.Model.INTERACTION_DIRECTIONS.TO_RIGHT:
+				// Go throught all the rows
+				for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
+					nextEmptyTokenColumn = -1;
+					actualAddToken = null;
+
+					// Go through all the columns to add token if needed
+					for (var indexColumn = tokens[indexRow].length - 1; indexColumn >= 0; indexColumn--) {
+						// Check if the token is valid
+						if (tokens[indexRow][indexColumn]) {
+							actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
+
+							// Check if the token is not empty
+							if (actualTokenNumber !== 0) {
+								// Check if no add token is stored
+								if (actualAddToken) {
+									// Check if the numbers are the same to add them
+									if (actualTokenNumber === actualAddToken.getNumber()) {
+										actualAddToken.setNumber(actualTokenNumber + actualAddToken.getNumber());
+										actualAddToken = null;
+										tokens[indexRow][indexColumn].setNumber(0);
+									} else {
+										actualAddToken = tokens[indexRow][indexColumn];
+									}
+								} else {
+									actualAddToken = tokens[indexRow][indexColumn];
+								}
+							}
+						}
+					}
+
+					// Go through all the columns to move them to the proper position
+					for (var indexColumn = tokens[indexRow].length - 1; indexColumn >= 0; indexColumn--) {
+						// Check if the column is empty
+						if (tokens[indexRow][indexColumn].getNumber() === 0) {
+							// Check if there's already an available position
+							if (nextEmptyTokenColumn === -1) {
+								nextEmptyTokenColumn = indexColumn;
+							}
+						} else {
+							// Check if the token is not the last available position
+							if (nextEmptyTokenColumn !== -1) {
+								// Move the non-empty token to the next available space
+								tokens[indexRow][nextEmptyTokenColumn].setNumber(tokens[indexRow][indexColumn].getNumber());
+
+								// Reset the moved token
+								tokens[indexRow][indexColumn] = 
+									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
+
+								nextEmptyTokenColumn--;
+							}
+						}
+					}
+				}
+
+				break;
+			case Game2024.Model.INTERACTION_DIRECTIONS.TO_DOWN:
+				break;
+			case Game2024.Model.INTERACTION_DIRECTIONS.TO_LEFT:
+				// Go throught all the rows
+				for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
+					nextEmptyTokenColumn = -1;
+					actualAddToken = null;
+
+					// Go through all the columns to add token if needed
+					for (var indexColumn = 0; indexColumn < tokens[indexRow].length; indexColumn++) {
+						// Check if the token is valid
+						if (tokens[indexRow][indexColumn]) {
+							actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
+
+							// Check if the token is not empty
+							if (actualTokenNumber !== 0) {
+								// Check if no add token is stored
+								if (actualAddToken) {
+									// Check if the numbers are the same to add them
+									if (actualTokenNumber === actualAddToken.getNumber()) {
+										actualAddToken.setNumber(actualTokenNumber + actualAddToken.getNumber());
+										actualAddToken = null;
+										tokens[indexRow][indexColumn].setNumber(0);
+									} else {
+										actualAddToken = tokens[indexRow][indexColumn];
+									}
+								} else {
+									actualAddToken = tokens[indexRow][indexColumn];
+								}
+							}
+						}
+					}
+
+					// Go through all the columns to move them to the proper position
+					for (var indexColumn = 0; indexColumn < tokens[indexRow].length; indexColumn++) {
+						// Check if the column is empty
+						if (tokens[indexRow][indexColumn].getNumber() === 0) {
+							// Check if there's already an available position
+							if (nextEmptyTokenColumn === -1) {
+								nextEmptyTokenColumn = indexColumn;
+							}
+						} else {
+							// Check if the token is not the last available position
+							if (nextEmptyTokenColumn !== -1) {
+								// Move the non-empty token to the next available space
+								tokens[indexRow][nextEmptyTokenColumn].setNumber(tokens[indexRow][indexColumn].getNumber());
+
+								// Reset the moved token
+								tokens[indexRow][indexColumn] = 
+									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
+
+								nextEmptyTokenColumn--;
+							}
+						}
+					}
+				}
+
+				break;
+			case Game2024.Model.INTERACTION_DIRECTIONS.TO_UP:
+				break;
+		}
 	}
 
 	/**
 	 * Print the board.
 	 */
 	var printBoard = function() {
-		guiController.paintBoard(board);
+		// guiController.paintBoard(board);
 	}
 
 	this.init = function() {
