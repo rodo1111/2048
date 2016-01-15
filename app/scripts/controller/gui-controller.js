@@ -2,12 +2,20 @@
  * GUI Controller class.
  */
 Game2024.Controller.GUIController = function(pBoardEl) {
+	var gameController = new Game2024.Controller.GameController();
 	var boardEl = pBoardEl;
+
+	/**
+	 * Initialize the game.
+	 */ 
+	var initGame = function() {
+		gameController.init();
+	}
 
 	/**
 	 * Paint the board according to the given object
 	 */
-	this.paintBoard = function(board) {
+	var paintBoard = function(board) {
 		var tokens = board.getTokens();
 		var actualTokenEl;
 
@@ -22,6 +30,11 @@ Game2024.Controller.GUIController = function(pBoardEl) {
 				}
 			}
 		}
+	}
+
+	this.init = function() {
+		initGame();
+		paintBoard(gameController.getBoard());
 	}
 	
 }

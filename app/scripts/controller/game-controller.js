@@ -291,15 +291,13 @@ Game2024.Controller.GameController = function(boardEl) {
 		}
 	}
 
-	/**
-	 * Print the board.
-	 */
-	var printBoard = function() {
-		// guiController.paintBoard(board);
+	this.getBoard = function() {
+		return board;
 	}
 
 	this.init = function() {
 		initializeBoard();
-		printBoard();
+
+		return board;
 	}
 }
