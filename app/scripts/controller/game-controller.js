@@ -91,277 +91,172 @@ Game2024.Controller.GameController = function(boardEl) {
 		var nextEmtpyTokenPosition = -1;
 		var movementResult = Game2024.Model.GAME_RESULTS.INVALID_MOVEMENT;
 
-		switch (direction) {
-			case Game2024.Model.INTERACTION_DIRECTIONS.TO_RIGHT:
-				// Go throught all the rows
-				for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
-					nextEmtpyTokenPosition = -1;
-					actualAddToken = null;
+		var processLeftRightMovements = function(indexColumnAssignation, indexColumnComparisson, indexColumnOperation) {
+			for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
+				nextEmtpyTokenPosition = -1;
+				actualAddToken = null;
+				
+				// Go through all the columns to add token if needed
+				for (var indexColumn = indexColumnAssignation(indexRow); indexColumnComparisson(indexRow, indexColumn); indexColumn = indexColumnOperation(indexColumn)) {
+					// Check if the token is valid
+					if (tokens[indexRow][indexColumn]) {
+						actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
 
-					// Go through all the columns to add token if needed
-					for (var indexColumn = tokens[indexRow].length - 1; indexColumn >= 0; indexColumn--) {
-						// Check if the token is valid
-						if (tokens[indexRow][indexColumn]) {
-							actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
+						// Check if the token is not empty
+						if (actualTokenNumber !== 0) {
+							// Check if no add token is stored
+							if (actualAddToken) {
+								// Check if the numbers are the same to add them
+								if (actualTokenNumber === actualAddToken.getNumber()) {
+									actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
+									actualAddToken.setNumber(actualTokenNumber);
+									actualAddToken = null;
+									tokens[indexRow][indexColumn].setNumber(0);
 
-							// Check if the token is not empty
-							if (actualTokenNumber !== 0) {
-								// Check if no add token is stored
-								if (actualAddToken) {
-									// Check if the numbers are the same to add them
-									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
-										actualAddToken.setNumber(actualTokenNumber);
-										actualAddToken = null;
-										tokens[indexRow][indexColumn].setNumber(0);
-
-										// Check if there's a game win
-										if (actualTokenNumber === GAME_MAX_SCORE) {
-											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
-										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-										}
-									} else {
-										actualAddToken = tokens[indexRow][indexColumn];
+									// Check if there's a game win
+									if (actualTokenNumber === GAME_MAX_SCORE) {
+										movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+									} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+										movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
 									}
 								} else {
 									actualAddToken = tokens[indexRow][indexColumn];
 								}
-							}
-						}
-					}
-
-					// Go through all the columns to move them to the proper position
-					for (var indexColumn = tokens[indexRow].length - 1; indexColumn >= 0; indexColumn--) {
-						// Check if the column is empty
-						if (tokens[indexRow][indexColumn].getNumber() === 0) {
-							// Check if there's already an available position
-							if (nextEmtpyTokenPosition === -1) {
-								nextEmtpyTokenPosition = indexColumn;
-							}
-						} else {
-							// Check if the token is not the last available position
-							if (nextEmtpyTokenPosition !== -1) {
-								// Move the non-empty token to the next available space
-								tokens[indexRow][nextEmtpyTokenPosition].setNumber(tokens[indexRow][indexColumn].getNumber());
-
-								// Reset the moved token
-								tokens[indexRow][indexColumn] = 
-									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
-
-								nextEmtpyTokenPosition = indexColumn;
-
-								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-								}
+							} else {
+								actualAddToken = tokens[indexRow][indexColumn];
 							}
 						}
 					}
 				}
+
+				// Go through all the columns to move them to the proper position
+				for (var indexColumn = indexColumnAssignation(indexRow); indexColumnComparisson(indexRow, indexColumn); indexColumn = indexColumnOperation(indexColumn)) {
+					// Check if the column is empty
+					if (tokens[indexRow][indexColumn].getNumber() === 0) {
+						// Check if there's already an available position
+						if (nextEmtpyTokenPosition === -1) {
+							nextEmtpyTokenPosition = indexColumn;
+						}
+					} else {
+						// Check if the token is not the last available position
+						if (nextEmtpyTokenPosition !== -1) {
+							// Move the non-empty token to the next available space
+							tokens[indexRow][nextEmtpyTokenPosition].setNumber(tokens[indexRow][indexColumn].getNumber());
+
+							// Reset the moved token
+							tokens[indexRow][indexColumn] = 
+								Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
+
+							nextEmtpyTokenPosition = indexColumn;
+							
+							if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+								movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
+							}
+						}
+					}
+				}
+			}
+		};
+
+		var processUpDownMovements = function(indexRowAssignation, indexRowComparisson, indexRowOperation) {
+			// Go throught all the columns
+			for (var indexColumn = 0; indexColumn < tokens[0].length; indexColumn++) {
+				nextEmtpyTokenPosition = -1;
+				actualAddToken = null;
+
+				// Go through all the rows to add token if needed
+				for (var indexRow = indexRowAssignation(indexColumn); indexRowComparisson(indexRow, indexColumn); indexRow = indexRowOperation(indexRow)) {
+					// Check if the token is valid
+					if (tokens[indexRow][indexColumn]) {
+						actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
+
+						// Check if the token is not empty
+						if (actualTokenNumber !== 0) {
+							// Check if no add token is stored
+							if (actualAddToken) {
+								// Check if the numbers are the same to add them
+								if (actualTokenNumber === actualAddToken.getNumber()) {
+									actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
+									actualAddToken.setNumber(actualTokenNumber);
+									actualAddToken = null;
+									tokens[indexRow][indexColumn].setNumber(0);
+
+									// Check if there's a game win
+									if (actualTokenNumber === GAME_MAX_SCORE) {
+										movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+									} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+										movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
+									}
+								} else {
+									actualAddToken = tokens[indexRow][indexColumn];
+								}
+							} else {
+								actualAddToken = tokens[indexRow][indexColumn];
+							}
+						}
+					}
+				}
+
+				// Go through all the columns to move them to the proper position
+				for (var indexRow = indexRowAssignation(indexColumn); indexRowComparisson(indexRow, indexColumn); indexRow = indexRowOperation(indexRow)) {
+					// Check if the column is empty
+					if (tokens[indexRow][indexColumn].getNumber() === 0) {
+						// Check if there's already an available position
+						if (nextEmtpyTokenPosition === -1) {
+							nextEmtpyTokenPosition = indexRow;
+						}
+					} else {
+						// Check if the token is not the last available position
+						if (nextEmtpyTokenPosition !== -1) {
+							// Move the non-empty token to the next available space
+							tokens[nextEmtpyTokenPosition][indexColumn].setNumber(tokens[indexRow][indexColumn].getNumber());
+
+							// Reset the moved token
+							tokens[indexRow][indexColumn] = 
+								Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
+
+							nextEmtpyTokenPosition = indexRow;
+							
+							if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+								movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
+							}
+						}
+					}
+				}
+			}
+		};
+
+		switch (direction) {
+			case Game2024.Model.INTERACTION_DIRECTIONS.TO_RIGHT:
+				processLeftRightMovements(
+					function(indexRow) { return tokens[indexRow].length - 1; }, 
+					function(indexRow, indexColumn) { return indexColumn >= 0; }, 
+					function(indexColumn) { return indexColumn - 1; }
+				);
 
 				break;
 			case Game2024.Model.INTERACTION_DIRECTIONS.TO_DOWN:
-				// Go throught all the columns
-				for (var indexColumn = 0; indexColumn < tokens[0].length; indexColumn++) {
-					nextEmtpyTokenPosition = -1;
-					actualAddToken = null;
-
-					// Go through all the rows to add token if needed
-					for (var indexRow = tokens.length - 1; indexRow >= 0; indexRow--) {
-						// Check if the token is valid
-						if (tokens[indexRow][indexColumn]) {
-							actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
-
-							// Check if the token is not empty
-							if (actualTokenNumber !== 0) {
-								// Check if no add token is stored
-								if (actualAddToken) {
-									// Check if the numbers are the same to add them
-									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
-										actualAddToken.setNumber(actualTokenNumber);
-										actualAddToken = null;
-										tokens[indexRow][indexColumn].setNumber(0);
-
-										// Check if there's a game win
-										if (actualTokenNumber === GAME_MAX_SCORE) {
-											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
-										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-										}
-									} else {
-										actualAddToken = tokens[indexRow][indexColumn];
-									}
-								} else {
-									actualAddToken = tokens[indexRow][indexColumn];
-								}
-							}
-						}
-					}
-
-					// Go through all the columns to move them to the proper position
-					for (var indexRow = tokens.length - 1; indexRow >= 0; indexRow--) {
-						// Check if the column is empty
-						if (tokens[indexRow][indexColumn].getNumber() === 0) {
-							// Check if there's already an available position
-							if (nextEmtpyTokenPosition === -1) {
-								nextEmtpyTokenPosition = indexRow;
-							}
-						} else {
-							// Check if the token is not the last available position
-							if (nextEmtpyTokenPosition !== -1) {
-								// Move the non-empty token to the next available space
-								tokens[nextEmtpyTokenPosition][indexColumn].setNumber(tokens[indexRow][indexColumn].getNumber());
-
-								// Reset the moved token
-								tokens[indexRow][indexColumn] = 
-									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
-
-								nextEmtpyTokenPosition = indexRow;
-								
-								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-								}
-							}
-						}
-					}
-				}
+				processUpDownMovements(
+					function(indexColumn) { return tokens.length - 1; }, 
+					function(indexRow, indexColumn) { return indexRow >= 0; }, 
+					function(indexRow) { return indexRow - 1; }
+				);
 
 				break;
 			case Game2024.Model.INTERACTION_DIRECTIONS.TO_LEFT:
-				// Go throught all the rows
-				for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
-					nextEmtpyTokenPosition = -1;
-					actualAddToken = null;
-
-					// Go through all the columns to add token if needed
-					for (var indexColumn = 0; indexColumn < tokens[indexRow].length; indexColumn++) {
-						// Check if the token is valid
-						if (tokens[indexRow][indexColumn]) {
-							actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
-
-							// Check if the token is not empty
-							if (actualTokenNumber !== 0) {
-								// Check if no add token is stored
-								if (actualAddToken) {
-									// Check if the numbers are the same to add them
-									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
-										actualAddToken.setNumber(actualTokenNumber);
-										actualAddToken = null;
-										tokens[indexRow][indexColumn].setNumber(0);
-
-										// Check if there's a game win
-										if (actualTokenNumber === GAME_MAX_SCORE) {
-											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
-										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-										}
-									} else {
-										actualAddToken = tokens[indexRow][indexColumn];
-									}
-								} else {
-									actualAddToken = tokens[indexRow][indexColumn];
-								}
-							}
-						}
-					}
-
-					// Go through all the columns to move them to the proper position
-					for (var indexColumn = 0; indexColumn < tokens[indexRow].length; indexColumn++) {
-						// Check if the column is empty
-						if (tokens[indexRow][indexColumn].getNumber() === 0) {
-							// Check if there's already an available position
-							if (nextEmtpyTokenPosition === -1) {
-								nextEmtpyTokenPosition = indexColumn;
-							}
-						} else {
-							// Check if the token is not the last available position
-							if (nextEmtpyTokenPosition !== -1) {
-								// Move the non-empty token to the next available space
-								tokens[indexRow][nextEmtpyTokenPosition].setNumber(tokens[indexRow][indexColumn].getNumber());
-
-								// Reset the moved token
-								tokens[indexRow][indexColumn] = 
-									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
-
-								nextEmtpyTokenPosition = indexColumn;
-								
-								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-								}
-							}
-						}
-					}
-				}
+				processLeftRightMovements(
+					function(indexRow) { return 0; }, 
+					function(indexRow, indexColumn) { return indexColumn < tokens[indexRow].length; }, 
+					function(indexColumn) { return indexColumn + 1; }
+				);
 
 				break;
 			case Game2024.Model.INTERACTION_DIRECTIONS.TO_UP:
-				// Go throught all the columns
-				for (var indexColumn = 0; indexColumn < tokens[0].length; indexColumn++) {
-					nextEmtpyTokenPosition = -1;
-					actualAddToken = null;
-
-					// Go through all the rows to add token if needed
-					for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
-						// Check if the token is valid
-						if (tokens[indexRow][indexColumn]) {
-							actualTokenNumber = tokens[indexRow][indexColumn].getNumber();
-
-							// Check if the token is not empty
-							if (actualTokenNumber !== 0) {
-								// Check if no add token is stored
-								if (actualAddToken) {
-									// Check if the numbers are the same to add them
-									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
-										actualAddToken.setNumber(actualTokenNumber);
-										actualAddToken = null;
-										tokens[indexRow][indexColumn].setNumber(0);
-
-										// Check if there's a game win
-										if (actualTokenNumber === GAME_MAX_SCORE) {
-											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
-										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-										}
-									} else {
-										actualAddToken = tokens[indexRow][indexColumn];
-									}
-								} else {
-									actualAddToken = tokens[indexRow][indexColumn];
-								}
-							}
-						}
-					}
-
-					// Go through all the columns to move them to the proper position
-					for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
-						// Check if the column is empty
-						if (tokens[indexRow][indexColumn].getNumber() === 0) {
-							// Check if there's already an available position
-							if (nextEmtpyTokenPosition === -1) {
-								nextEmtpyTokenPosition = indexRow;
-							}
-						} else {
-							// Check if the token is not the last available position
-							if (nextEmtpyTokenPosition !== -1) {
-								// Move the non-empty token to the next available space
-								tokens[nextEmtpyTokenPosition][indexColumn].setNumber(tokens[indexRow][indexColumn].getNumber());
-
-								// Reset the moved token
-								tokens[indexRow][indexColumn] = 
-									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
-
-								nextEmtpyTokenPosition = indexRow;
-								
-								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
-									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
-								}
-							}
-						}
-					}
-				}
+				processUpDownMovements(
+					function(indexColumn) { return 0; }, 
+					function(indexRow, indexColumn) { return indexRow < tokens.length; }, 
+					function(indexRow) { return indexRow + 1; }
+				);
 
 				break;
 		}
