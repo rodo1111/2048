@@ -57,10 +57,12 @@ Game2024.Controller.GameController = function(boardEl) {
 	 */ 
 	this.processMove = function(direction, board) {
 		// Process the board interaction
-		this.processBoardInteraction(direction, board);
+		var validMovement = this.processBoardInteraction(direction, board);
 
-		// Generate the new token in board
-		this.generateNewToken();
+		// If the movement was valid, generate a new token
+		if (validMovement) {
+			this.generateNewToken();
+		}
 	};
 
 	/**
@@ -68,6 +70,8 @@ Game2024.Controller.GameController = function(boardEl) {
 	 *
 	 * @param direction Direction given by the user interaction
 	 * @param board Actual board to make the interaction
+	 *
+	 * @return True/False if there was a movement in the board
 	 */ 
 	this.processBoardInteraction = function(direction, board) {
 		var tokens = board.getTokens();
@@ -75,6 +79,7 @@ Game2024.Controller.GameController = function(boardEl) {
 		var nextTokenNumber;
 		var actualAddToken;
 		var nextEmtpyTokenPosition = -1;
+		var validMovement = false;
 
 		switch (direction) {
 			case Game2024.Model.INTERACTION_DIRECTIONS.TO_RIGHT:
@@ -127,6 +132,7 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexColumn;
+								validMovement = true;
 							}
 						}
 					}
@@ -183,6 +189,7 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexRow;
+								validMovement = true;
 							}
 						}
 					}
@@ -239,6 +246,7 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexColumn;
+								validMovement = true;
 							}
 						}
 					}
@@ -295,6 +303,7 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexRow;
+								validMovement = true;
 							}
 						}
 					}
@@ -302,6 +311,8 @@ Game2024.Controller.GameController = function(boardEl) {
 
 				break;
 		}
+
+		return validMovement;
 	};
 
 	/**
