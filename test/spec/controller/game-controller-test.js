@@ -489,7 +489,6 @@
         tokens[2][3].setNumber(8);
         tokens[3][0].setNumber(16);
         tokens[3][1].setNumber(16);
-        tokens[3][2].setNumber(0);
         tokens[3][3].setNumber(8);
 
         // Process the board interaction to the up
@@ -513,6 +512,93 @@
         assert(tokens[3][1].getNumber() === 0);
         assert(tokens[3][2].getNumber() === 0);
         assert(tokens[3][3].getNumber() === 0);
+      });
+    });
+
+    describe('findAvailableTokenPositions Tests', function () {
+      it('Test 1', function () {
+        var gameController = new Game2024.Controller.GameController();
+        var tokens = board.getTokens();
+        var availablePositions;
+
+        tokens[0][1].setNumber(2);
+        tokens[0][3].setNumber(2);
+        tokens[1][0].setNumber(4);
+        tokens[1][2].setNumber(4);
+        tokens[2][0].setNumber(8);
+        tokens[3][3].setNumber(16);
+
+        // Get the available board positions
+        availablePositions = gameController.findAvailableTokenPositions(board);
+
+        assert(availablePositions.length === 10);
+        assert(availablePositions[0].getRow() === 0 && availablePositions[0].getColumn() === 0);
+        assert(availablePositions[1].getRow() === 0 && availablePositions[1].getColumn() === 2);
+        assert(availablePositions[2].getRow() === 1 && availablePositions[2].getColumn() === 1);
+        assert(availablePositions[3].getRow() === 1 && availablePositions[3].getColumn() === 3);
+        assert(availablePositions[4].getRow() === 2 && availablePositions[4].getColumn() === 1);
+        assert(availablePositions[5].getRow() === 2 && availablePositions[5].getColumn() === 2);
+        assert(availablePositions[6].getRow() === 2 && availablePositions[6].getColumn() === 3);
+        assert(availablePositions[7].getRow() === 3 && availablePositions[7].getColumn() === 0);
+        assert(availablePositions[8].getRow() === 3 && availablePositions[8].getColumn() === 1);
+        assert(availablePositions[9].getRow() === 3 && availablePositions[9].getColumn() === 2);
+      });
+
+      it('Test 2', function () {
+        var gameController = new Game2024.Controller.GameController();
+        var tokens = board.getTokens();
+        var availablePositions;
+
+        tokens[0][0].setNumber(2);
+        tokens[0][1].setNumber(2);
+        tokens[0][2].setNumber(2);
+        tokens[0][3].setNumber(2);
+        tokens[1][0].setNumber(2);
+        tokens[1][1].setNumber(2);
+        tokens[1][2].setNumber(4);
+        tokens[1][3].setNumber(4);
+        tokens[2][0].setNumber(2);
+        tokens[2][1].setNumber(16);
+        tokens[2][2].setNumber(8);
+        tokens[2][3].setNumber(8);
+        tokens[3][0].setNumber(16);
+        tokens[3][1].setNumber(16);
+        tokens[3][3].setNumber(8);
+
+        // Get the available board positions
+        availablePositions = gameController.findAvailableTokenPositions(board);
+
+        assert(availablePositions.length === 1);
+        assert(availablePositions[0].getRow() === 3 && availablePositions[0].getColumn() === 2);
+      });
+
+      it('Test 3', function () {
+        var expectedRows = [0, 2, 3];
+        var gameController = new Game2024.Controller.GameController();
+        var tokens = board.getTokens();
+        var availablePositions;
+
+        tokens[1][0].setNumber(2);
+        tokens[1][1].setNumber(2);
+        tokens[1][2].setNumber(2);
+        tokens[1][3].setNumber(2);
+
+        // Get the available board positions
+        availablePositions = gameController.findAvailableTokenPositions(board);
+
+        assert(availablePositions.length === 12);
+        assert(availablePositions[0].getRow() === 0 && availablePositions[0].getColumn() === 0);
+        assert(availablePositions[1].getRow() === 0 && availablePositions[1].getColumn() === 1);
+        assert(availablePositions[2].getRow() === 0 && availablePositions[2].getColumn() === 2);
+        assert(availablePositions[3].getRow() === 0 && availablePositions[3].getColumn() === 3);
+        assert(availablePositions[4].getRow() === 2 && availablePositions[4].getColumn() === 0);
+        assert(availablePositions[5].getRow() === 2 && availablePositions[5].getColumn() === 1);
+        assert(availablePositions[6].getRow() === 2 && availablePositions[6].getColumn() === 2);
+        assert(availablePositions[7].getRow() === 2 && availablePositions[7].getColumn() === 3);
+        assert(availablePositions[8].getRow() === 3 && availablePositions[8].getColumn() === 0);
+        assert(availablePositions[9].getRow() === 3 && availablePositions[9].getColumn() === 1);
+        assert(availablePositions[10].getRow() === 3 && availablePositions[10].getColumn() === 2);
+        assert(availablePositions[11].getRow() === 3 && availablePositions[11].getColumn() === 3);
       });
     });
   });

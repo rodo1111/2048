@@ -23,7 +23,7 @@ Game2024.Controller.GUIController = function(pDocument, pBoardEl) {
 				e.preventDefault();
 				return false;
 			}
-		}
+		};
 
 		var handleInteractionEvent = function(e) {
 			var keyCode = e.keyCode;
@@ -33,35 +33,33 @@ Game2024.Controller.GUIController = function(pDocument, pBoardEl) {
 				keyCode = e.charCode;
 			}
 
-			console.log(keyCode);
-
 			// Check the interaction to process
 			switch (keyCode) {
 				// Left arrow
 				case 37: 
-					gameController.processBoardInteraction(Game2024.Model.INTERACTION_DIRECTIONS.TO_LEFT, 
+					gameController.processMove(Game2024.Model.INTERACTION_DIRECTIONS.TO_LEFT, 
 						gameController.getBoard());
 					break;
 				// Up arrow
 				case 38: 
-					gameController.processBoardInteraction(Game2024.Model.INTERACTION_DIRECTIONS.TO_UP, 
+					gameController.processMove(Game2024.Model.INTERACTION_DIRECTIONS.TO_UP, 
 						gameController.getBoard());
 					break;
 				// Right arrow
 				case 39: 
-					gameController.processBoardInteraction(Game2024.Model.INTERACTION_DIRECTIONS.TO_RIGHT, 
+					gameController.processMove(Game2024.Model.INTERACTION_DIRECTIONS.TO_RIGHT, 
 						gameController.getBoard());
 					break;
 				// Down arrow
 				case 40: 
-					gameController.processBoardInteraction(Game2024.Model.INTERACTION_DIRECTIONS.TO_DOWN, 
+					gameController.processMove(Game2024.Model.INTERACTION_DIRECTIONS.TO_DOWN, 
 						gameController.getBoard());
 					break;
 			}
 
 			// Paint the board with the update values
 			paintBoard(gameController.getBoard());
-		}
+		};
 
 		document.on('keydown', preventKeysInteractions);
 		document.on('keyup', handleInteractionEvent);
@@ -72,7 +70,7 @@ Game2024.Controller.GUIController = function(pDocument, pBoardEl) {
 	 */ 
 	var initGame = function() {
 		gameController.init();
-	}
+	};
 
 	/**
 	 * Paint the board according to the given object
@@ -96,12 +94,12 @@ Game2024.Controller.GUIController = function(pDocument, pBoardEl) {
 				}
 			}
 		}
-	}
+	};
 
 	this.init = function() {
 		bindInteractionEvents();
 		initGame();
 		paintBoard(gameController.getBoard());
-	}
+	};
 	
 }

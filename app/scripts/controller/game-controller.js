@@ -11,7 +11,7 @@ Game2024.Controller.GameController = function(boardEl) {
 		var tokens = generateBoardTokens();
 
 		board = new Game2024.Model.Board(tokens);
-	}
+	};
 
 	/**
 	 * Generate the tokens of the board.
@@ -35,7 +35,7 @@ Game2024.Controller.GameController = function(boardEl) {
 		actualToken.setNumber(2);
 
 		return tokens;
-	}
+	};
 
 	/**
 	 * Generate the random initial token position.
@@ -47,7 +47,21 @@ Game2024.Controller.GameController = function(boardEl) {
 		var randomColumn = Math.floor((Math.random() * tokens.length));
 
 		return [randomRow, randomColumn];
-	}
+	};
+
+	/**
+	 * Process the addition fo the tokens according to the given direction.
+	 *
+	 * @param direction Direction given by the user interaction
+	 * @param board Actual board to make the interaction
+	 */ 
+	this.processMove = function(direction, board) {
+		// Process the board interaction
+		this.processBoardInteraction(direction, board);
+
+		// Generate the new token in board
+		this.generateNewToken();
+	};
 
 	/**
 	 * Process the addition fo the tokens according to the given direction.
@@ -288,15 +302,62 @@ Game2024.Controller.GameController = function(boardEl) {
 
 				break;
 		}
-	}
+	};
+
+	/**
+	 * Find the available token positions
+	 * 
+	 * @param board Board object to process
+	 *
+	 * @return Array with the available positions
+	 */ 
+	this.findAvailableTokenPositions = function(board) {
+		var tokens = board.getTokens();
+		var availableTokenPositions = [];
+
+		// Find the available spaces to generate the 
+		for (var indexRow = 0; indexRow < tokens.length; indexRow++) {
+			for (var indexColumn = 0; indexColumn < tokens[indexRow].length; indexColumn++) {
+				if (tokens[indexRow][indexColumn].getNumber() === 0) {
+					availableTokenPositions.push(new Game2024.Model.AvailableTokenPosition(indexRow, indexColumn));
+				}
+			}
+		}
+
+		return availableTokenPositions;
+	};
+
+	/**
+	 * Generate a new token in the board to play with.
+	 */ 
+	this.generateNewToken = function() {
+		/**
+		 * Generate a new token number.
+		 * 
+		 * @return Token number
+		 */ 
+		var generateNewTokenNumber = function() {
+			var AVAILABLE_NUMBERS = [2, 4];
+
+			return AVAILABLE_NUMBERS[Math.floor(Math.random() * AVAILABLE_NUMBERS.length)];
+		};
+
+		// Find the available positions
+		var availableTokenPositions = this.findAvailableTokenPositions(board);
+		var newTokenPosition = availableTokenPositions[Math.floor(Math.random() * availableTokenPositions.length)];
+		var newTokenNumber = generateNewTokenNumber();
+
+		// Assign the new token number
+		board.getTokens()[newTokenPosition.getRow()][newTokenPosition.getColumn()].setNumber(newTokenNumber);
+	};
 
 	this.getBoard = function() {
 		return board;
-	}
+	};
 
 	this.init = function() {
 		initializeBoard();
 
 		return board;
-	}
-}
+	};
+};

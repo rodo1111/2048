@@ -6,5 +6,5 @@ Game2024.Model.Board = function(pTokens) {
 
 	this.getTokens = function() {
 		return tokens;
-	}
-}
+	};
+};
