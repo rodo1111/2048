@@ -2,6 +2,7 @@
  * GameController class.
  */
 Game2024.Controller.GameController = function(boardEl) {
+	var GAME_MAX_SCORE = 2048;
 	var board;
 
 	/**
@@ -54,15 +55,24 @@ Game2024.Controller.GameController = function(boardEl) {
 	 *
 	 * @param direction Direction given by the user interaction
 	 * @param board Actual board to make the interaction
+	 * 
+	 * @return GAME_RESULT constant
 	 */ 
 	this.processMove = function(direction, board) {
 		// Process the board interaction
-		var validMovement = this.processBoardInteraction(direction, board);
+		var movementResult = this.processBoardInteraction(direction, board);
+
+		// Find the available positions
+		var availableTokenPositions = this.findAvailableTokenPositions(board);
 
 		// If the movement was valid, generate a new token
-		if (validMovement) {
-			this.generateNewToken();
+		if (movementResult === Game2024.Model.GAME_RESULTS.VALID_MOVEMENT && availableTokenPositions.length > 0) {
+			this.generateNewToken(availableTokenPositions, board);
+		} else if (movementResult === Game2024.Model.GAME_RESULTS.INVALID_MOVEMENT && availableTokenPositions.length === 0) {
+			movementResult = Game2024.Model.GAME_RESULTS.GAME_OVER;
 		}
+
+		return movementResult;
 	};
 
 	/**
@@ -71,7 +81,7 @@ Game2024.Controller.GameController = function(boardEl) {
 	 * @param direction Direction given by the user interaction
 	 * @param board Actual board to make the interaction
 	 *
-	 * @return True/False if there was a movement in the board
+	 * @return GAME_RESULT constant
 	 */ 
 	this.processBoardInteraction = function(direction, board) {
 		var tokens = board.getTokens();
@@ -79,7 +89,7 @@ Game2024.Controller.GameController = function(boardEl) {
 		var nextTokenNumber;
 		var actualAddToken;
 		var nextEmtpyTokenPosition = -1;
-		var validMovement = false;
+		var movementResult = Game2024.Model.GAME_RESULTS.INVALID_MOVEMENT;
 
 		switch (direction) {
 			case Game2024.Model.INTERACTION_DIRECTIONS.TO_RIGHT:
@@ -100,9 +110,15 @@ Game2024.Controller.GameController = function(boardEl) {
 								if (actualAddToken) {
 									// Check if the numbers are the same to add them
 									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualAddToken.setNumber(actualTokenNumber + actualAddToken.getNumber());
+										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
+										actualAddToken.setNumber(actualTokenNumber);
 										actualAddToken = null;
 										tokens[indexRow][indexColumn].setNumber(0);
+
+										// Check if there's a game win
+										if (actualTokenNumber === GAME_MAX_SCORE) {
+											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
 									}
@@ -132,7 +148,10 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexColumn;
-								validMovement = true;
+
+								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
+								}
 							}
 						}
 					}
@@ -157,9 +176,15 @@ Game2024.Controller.GameController = function(boardEl) {
 								if (actualAddToken) {
 									// Check if the numbers are the same to add them
 									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualAddToken.setNumber(actualTokenNumber + actualAddToken.getNumber());
+										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
+										actualAddToken.setNumber(actualTokenNumber);
 										actualAddToken = null;
 										tokens[indexRow][indexColumn].setNumber(0);
+
+										// Check if there's a game win
+										if (actualTokenNumber === GAME_MAX_SCORE) {
+											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
 									}
@@ -189,7 +214,10 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexRow;
-								validMovement = true;
+								
+								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
+								}
 							}
 						}
 					}
@@ -214,9 +242,15 @@ Game2024.Controller.GameController = function(boardEl) {
 								if (actualAddToken) {
 									// Check if the numbers are the same to add them
 									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualAddToken.setNumber(actualTokenNumber + actualAddToken.getNumber());
+										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
+										actualAddToken.setNumber(actualTokenNumber);
 										actualAddToken = null;
 										tokens[indexRow][indexColumn].setNumber(0);
+
+										// Check if there's a game win
+										if (actualTokenNumber === GAME_MAX_SCORE) {
+											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
 									}
@@ -246,7 +280,10 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexColumn;
-								validMovement = true;
+								
+								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
+								}
 							}
 						}
 					}
@@ -271,9 +308,15 @@ Game2024.Controller.GameController = function(boardEl) {
 								if (actualAddToken) {
 									// Check if the numbers are the same to add them
 									if (actualTokenNumber === actualAddToken.getNumber()) {
-										actualAddToken.setNumber(actualTokenNumber + actualAddToken.getNumber());
+										actualTokenNumber = actualTokenNumber + actualAddToken.getNumber();
+										actualAddToken.setNumber(actualTokenNumber);
 										actualAddToken = null;
 										tokens[indexRow][indexColumn].setNumber(0);
+
+										// Check if there's a game win
+										if (actualTokenNumber === GAME_MAX_SCORE) {
+											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
 									}
@@ -303,7 +346,10 @@ Game2024.Controller.GameController = function(boardEl) {
 									Game2024.Handler.TokenHandler.resetToken(tokens[indexRow][indexColumn]);
 
 								nextEmtpyTokenPosition = indexRow;
-								validMovement = true;
+								
+								if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+									movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
+								}
 							}
 						}
 					}
@@ -312,7 +358,7 @@ Game2024.Controller.GameController = function(boardEl) {
 				break;
 		}
 
-		return validMovement;
+		return movementResult;
 	};
 
 	/**
@@ -340,8 +386,11 @@ Game2024.Controller.GameController = function(boardEl) {
 
 	/**
 	 * Generate a new token in the board to play with.
+	 *
+	 * @param availableTokenPositions Array with the available token positions
+	 * @param board Board object
 	 */ 
-	this.generateNewToken = function() {
+	this.generateNewToken = function(availableTokenPositions, board) {
 		/**
 		 * Generate a new token number.
 		 * 
@@ -353,8 +402,6 @@ Game2024.Controller.GameController = function(boardEl) {
 			return AVAILABLE_NUMBERS[Math.floor(Math.random() * AVAILABLE_NUMBERS.length)];
 		};
 
-		// Find the available positions
-		var availableTokenPositions = this.findAvailableTokenPositions(board);
 		var newTokenPosition = availableTokenPositions[Math.floor(Math.random() * availableTokenPositions.length)];
 		var newTokenNumber = generateNewTokenNumber();
 
