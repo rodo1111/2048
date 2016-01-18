@@ -118,6 +118,8 @@ Game2024.Controller.GameController = function(boardEl) {
 										// Check if there's a game win
 										if (actualTokenNumber === GAME_MAX_SCORE) {
 											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
 										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
@@ -184,6 +186,8 @@ Game2024.Controller.GameController = function(boardEl) {
 										// Check if there's a game win
 										if (actualTokenNumber === GAME_MAX_SCORE) {
 											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
 										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
@@ -250,6 +254,8 @@ Game2024.Controller.GameController = function(boardEl) {
 										// Check if there's a game win
 										if (actualTokenNumber === GAME_MAX_SCORE) {
 											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
 										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
@@ -316,6 +322,8 @@ Game2024.Controller.GameController = function(boardEl) {
 										// Check if there's a game win
 										if (actualTokenNumber === GAME_MAX_SCORE) {
 											movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
+										} else if (movementResult !== Game2024.Model.GAME_RESULTS.GAME_WIN) {
+											movementResult = Game2024.Model.GAME_RESULTS.VALID_MOVEMENT;
 										}
 									} else {
 										actualAddToken = tokens[indexRow][indexColumn];
