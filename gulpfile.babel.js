@@ -9,7 +9,7 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 gulp.task('styles', () => {
-  return gulp.src('app/styles/*.scss')
+  return gulp.src('app/styles/**/*.scss')
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.sass.sync({
@@ -24,10 +24,16 @@ gulp.task('styles', () => {
 });
 
 gulp.task('scripts', () => {
-  return gulp.src('app/scripts/**/*.js')
+  return gulp.src([
+      'app/scripts/game-2024.js', 
+      'app/scripts/model/*.js', 
+      'app/scripts/handler/*.js', 
+      'app/scripts/controller/*.js', 
+      'app/scripts/app.js'])
+    .pipe($.concat('main.js'))
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
-    .pipe($.babel())
+    .pipe($.babel())    
     .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('.tmp/scripts'))
     .pipe(reload({stream: true}));
