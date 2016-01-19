@@ -84,6 +84,9 @@ Game2024.Controller.GUIController = function(pDocument, pBoardEl) {
 			// Paint the board with the update values
 			paintBoard(gameController.getBoard());
 
+			// Paint the score
+			paintScore(gameController.getScore());
+
 			// Check if the game was a win
 			if (moveResult === Game2024.Model.GAME_RESULTS.GAME_WIN || moveResult === Game2024.Model.GAME_RESULTS.GAME_OVER) {
 				handleGameMessage(moveResult);
@@ -130,10 +133,20 @@ Game2024.Controller.GUIController = function(pDocument, pBoardEl) {
 		}
 	};
 
+	/**
+	 * Paint the game score.
+	 *
+	 * @param score The score to paint
+	 */
+	var paintScore = function(score) {
+		$('.score span', boardEl).text(score);
+	};
+
 	this.init = function() {
 		bindInteractionEvents();
 		initGame();
 		paintBoard(gameController.getBoard());
+		paintScore(gameController.getScore());
 	};
 	
 }

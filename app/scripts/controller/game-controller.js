@@ -4,6 +4,7 @@
 Game2024.Controller.GameController = function(boardEl) {
 	var GAME_MAX_SCORE = 2048;
 	var board;
+	var score = 0;
 
 	/**
 	 * Function to initialize the board.
@@ -113,6 +114,9 @@ Game2024.Controller.GameController = function(boardEl) {
 									actualAddToken = null;
 									tokens[indexRow][indexColumn].setNumber(0);
 
+									// Add the number to the score
+									score += actualTokenNumber;
+
 									// Check if there's a game win
 									if (actualTokenNumber === GAME_MAX_SCORE) {
 										movementResult = Game2024.Model.GAME_RESULTS.GAME_WIN;
@@ -180,6 +184,9 @@ Game2024.Controller.GameController = function(boardEl) {
 									actualAddToken.setNumber(actualTokenNumber);
 									actualAddToken = null;
 									tokens[indexRow][indexColumn].setNumber(0);
+
+									// Add the number to the score
+									score += actualTokenNumber;
 
 									// Check if there's a game win
 									if (actualTokenNumber === GAME_MAX_SCORE) {
@@ -315,6 +322,10 @@ Game2024.Controller.GameController = function(boardEl) {
 	this.getBoard = function() {
 		return board;
 	};
+
+	this.getScore = function() {
+		return score;
+	}
 
 	this.init = function() {
 		initializeBoard();
